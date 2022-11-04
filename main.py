@@ -176,9 +176,3 @@ class Human:
 
     def get_job(self):
         self.job = Job(self)
-
-
-me = Human()
-me.money = 9999
-my_car = me.get_car()
-my_car.ride()
