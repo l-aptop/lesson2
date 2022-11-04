@@ -46,8 +46,10 @@ class Project:
         self.repository = repository
 
     def connect_repository(self, repository: Repository):
-        self.repository = repository
-        return self
+        if self.repository is None:
+            self.repository = repository
+            return self
+        raise Satisfied("There is already a repository connected to this project")
 
     def delete(self):
         if self.parent is not None:
@@ -64,8 +66,10 @@ class GitHub:
         self.repositories = repositories if repositories is not () else []
 
     def create_account(self, username: str, password: str, email: str):
-        self.account = Account(username, password, email)
-        return self.account
+        if self.account is None:
+            self.account = Account(username, password, email)
+            return self.account
+        raise Satisfied("You already have an account")
 
     def create_repository(self, project: Project):
         if self.account is not None:
@@ -94,5 +98,7 @@ class PyCharm:
         raise NotFound("Project is not owned by this PyCharm instance")
 
     def connect_account(self, account: Account):
-        self.account = account
-        return self
+        if self.account is None:
+            self.account = account
+            return self
+        raise Satisfied("An account is already connected to this PyCharm instance")
