@@ -56,7 +56,7 @@ class Car:
             self.owner.money -= 40
             return self
         raise NotEnoughMoney(f"You do not have enough money to repair your car. "
-                             f"You have {self.owner.money} and you need 40")
+                             f"You have {self.owner.money} and you need more than 40")
 
     def ride(self):
         if self.durability < 1:
@@ -73,7 +73,8 @@ class Car:
             self.color = color
             self.owner.money -= 30
             return self
-        raise NotEnoughMoney(f"You do not have enough money to buy a home. You have {self.owner.money} and you need 30")
+        raise NotEnoughMoney(f"You do not have enough money to buy a home."
+                             f" You have {self.owner.money} and you need more than 30")
 
 
 class Bicycle:
@@ -103,7 +104,7 @@ class Bicycle:
                 self.owner.satiety = 1
             return self
         raise NotEnoughMoney(f"You do not have enough money to paint your car. "
-                             f"You have {self.owner.money} and you need 10")
+                             f"You have {self.owner.money} and you need more than 10")
 
 
 class Human:
@@ -114,7 +115,7 @@ class Human:
         self.name = name
         self.money = 100
         self.gladness = 50
-        self.satiety = 50
+        self.satiety = 100
         self.job = job
         self.home = home
         self.car = car
@@ -126,8 +127,8 @@ class Human:
             self.money -= prices[what]["price"]
             self.__setattr__(prices[what]["gives"][0], prices[what]["gives"][1])
             return self
-        raise NotEnoughMoney(f"You do not have enough money to buy a home. "
-                             f"You have {self.money} and you need {prices[what]['price']}")
+        raise NotEnoughMoney(f"You do not have enough money to buy {what} "
+                             f"You have {self.money} and you need more than {prices[what]['price']}")
 
     def get_home(self):
         if self.home is not None:
@@ -136,7 +137,8 @@ class Human:
             self.home = Home(self)
             self.money -= 50
             return self.home
-        raise NotEnoughMoney(f"You do not have enough money to buy a home. You have {self.money} and you need 50")
+        raise NotEnoughMoney(f"You do not have enough money to buy a home. "
+                             f"You have {self.money} and you need more than 50")
 
     def get_food(self):
         if self.home.food < 0:
@@ -159,7 +161,24 @@ class Human:
             self.bicycle = Bicycle(self)
             self.money -= 20
             return self.bicycle
-        raise NotEnoughMoney(f"You do not have enough money to buy a bicycle. You have {self.money} and you need 20")
+        raise NotEnoughMoney(f"You do not have enough money to buy a bicycle. "
+                             f"You have {self.money} and you need  more than 20")
+
+    def get_car(self):
+        if self.car is not None:
+            raise Present(f"You already have a car")
+        if self.money > 100:
+            self.car = Car(self)
+            self.money -= 100
+            return self.car
+        raise NotEnoughMoney(f"You do not have enough money to buy a car. "
+                             f"You have {self.money} and you need more than 100")
 
     def get_job(self):
         self.job = Job(self)
+
+
+me = Human()
+me.money = 9999
+my_car = me.get_car()
+my_car.ride()
